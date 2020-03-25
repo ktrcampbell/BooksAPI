@@ -39,8 +39,8 @@ public class BookRetrofitInstance {
         return retrofit.create(BookService.class);
     }
 
-    public Observable<BookResult>searchBooks(String keyword, String author){
-        return bookService.searchBooks(keyword, author);
+    public Observable<BookResult>searchBooks(String query){
+        return bookService.searchBooks(query);
     }
 
 }

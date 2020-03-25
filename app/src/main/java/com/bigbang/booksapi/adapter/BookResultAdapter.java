@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigbang.booksapi.R;
 import com.bigbang.booksapi.model.Item;
+import com.bigbang.booksapi.model.VolumeInfo;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -24,8 +25,17 @@ import okhttp3.internal.Util;
 
 public class BookResultAdapter extends RecyclerView.Adapter<BookResultAdapter.BookResultViewHolder> {
 
-    private List<Item> bookList = new ArrayList<>();
+    private List<Item> bookList;
+    private BookClickListener bookClickListener;
 
+    public BookResultAdapter(List<Item> bookList, BookClickListener bookClickListener){
+        this.bookList = bookList;
+        this.bookClickListener = bookClickListener;
+    }
+
+    public interface BookClickListener{
+        void saveBook(Item bookItem);
+    }
     @NonNull
     @Override
     public BookResultViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -56,6 +66,11 @@ public class BookResultAdapter extends RecyclerView.Adapter<BookResultAdapter.Bo
             }
             holder.bookAuthorTextView.setText(authors);
         }
+
+        holder.itemView.setOnClickListener(view->
+        {
+            bookClickListener.saveBook(bookList.get(position));
+        });
     }
 
     @Override

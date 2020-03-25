@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigbang.booksapi.R;
 import com.bigbang.booksapi.adapter.BookResultAdapter;
+import com.bigbang.booksapi.database.BookEntity;
 import com.bigbang.booksapi.model.BookResult;
 import com.bigbang.booksapi.model.Item;
 import com.bigbang.booksapi.util.DebugLogger;
 import com.bigbang.booksapi.viewmodel.BookViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,6 +36,7 @@ import static com.bigbang.booksapi.util.DebugLogger.*;
 public class SearchFragment extends Fragment {
 
     private BookViewModel viewModel;
+    private List<Item> books = new ArrayList<>();
     private BookResultAdapter bookAdapter;
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -42,9 +45,6 @@ public class SearchFragment extends Fragment {
 
     @BindView(R.id.input_keyword_textinput)
     EditText keywordEditText;
-
-    @BindView(R.id.input_author_textinput)
-    EditText authorEditText;
 
     @BindView(R.id.search_button)
     Button searchButton;
@@ -61,7 +61,7 @@ public class SearchFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         viewModel = ViewModelProviders.of(this).get(BookViewModel.class);
-        disposable.add(viewModel.getList().subscribe(bookResult -> {
+        disposable.add(viewModel.getBookList(query).subscribe(bookResult -> {
             displayBooks(bookResult);
         }, throwable-> {
 
@@ -82,12 +82,9 @@ public class SearchFragment extends Fragment {
             bookAdapter.setResults(bookResult.getItems());
         }
 
-
     private void performSearch() {
         String keyword = keywordEditText.getEditableText().toString();
-        String author = authorEditText.getEditableText().toString();
-        viewModel.searchVolumes(keyword, author);
+        viewModel.searchVolumes(keyword);
     }
-
 
 }

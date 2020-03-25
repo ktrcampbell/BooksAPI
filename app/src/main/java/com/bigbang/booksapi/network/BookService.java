@@ -10,5 +10,5 @@ import retrofit2.http.Query;
 public interface BookService {
 
     @GET("/books/v1/volumes")
-    Observable<BookResult>searchBooks(@Query("q") String query, @Query("inauthor")String author);
+    Observable<BookResult>searchBooks(@Query("q") String query);
 }
