@@ -13,6 +13,7 @@ import static com.bigbang.booksapi.util.Constants.*;
 public class BookRetrofitInstance {
 
     private BookService bookService;
+    private OkHttpClient client;
 
     public BookRetrofitInstance() {
 
@@ -20,8 +21,16 @@ public class BookRetrofitInstance {
     }
 
     private Retrofit createRetrofit() {
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
+
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
