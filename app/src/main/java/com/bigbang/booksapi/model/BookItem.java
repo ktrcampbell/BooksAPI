@@ -4,7 +4,7 @@ package com.bigbang.booksapi.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Item {
+public class BookItem {
 
     @SerializedName("kind")
     @Expose

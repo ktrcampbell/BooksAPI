@@ -12,7 +12,7 @@ public class BookResult {
     private String kind;
     @SerializedName("items")
     @Expose
-    private List<Item> items = null;
+    private List<BookItem> items = null;
     @SerializedName("totalItems")
     @Expose
     int totalItems;
@@ -25,11 +25,11 @@ public class BookResult {
         this.kind = kind;
     }
 
-    public List<Item> getItems() {
+    public List<BookItem> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<BookItem> items) {
         this.items = items;
     }
 

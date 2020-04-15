@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigbang.booksapi.R;
 import com.bigbang.booksapi.adapter.BookResultAdapter;
-import com.bigbang.booksapi.database.BookEntity;
-import com.bigbang.booksapi.model.BookResult;
-import com.bigbang.booksapi.model.Item;
+import com.bigbang.booksapi.model.BookItem;
 import com.bigbang.booksapi.util.DebugLogger;
 import com.bigbang.booksapi.viewmodel.BookViewModel;
 
@@ -27,16 +25,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
-import static com.bigbang.booksapi.util.DebugLogger.*;
-
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements BookResultAdapter.BookClickListener {
 
     private BookViewModel viewModel;
-    private List<Item> books = new ArrayList<>();
+    private List<BookItem> books = new ArrayList<>();
     private BookResultAdapter bookAdapter;
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -60,8 +54,11 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
+        bookAdapter = new BookResultAdapter(new ArrayList<>(), this);
+
         viewModel = ViewModelProviders.of(this).get(BookViewModel.class);
-        disposable.add(viewModel.getBookList(query).subscribe(bookResult -> {
+        disposable.add(viewModel.getBookList("Harry Potter").subscribe(bookResult -> {
+            DebugLogger.logDebug("Books: " + bookResult.size());
             displayBooks(bookResult);
         }, throwable-> {
 
@@ -70,21 +67,22 @@ public class SearchFragment extends Fragment {
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         searchRecyclerView.setAdapter(bookAdapter);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performSearch();
-            }
-        });
+        searchButton.setOnClickListener(searchview -> performSearch());
     }
 
-    private void displayBooks(BookResult bookResult) {
-            bookAdapter.setResults(bookResult.getItems());
+    private void displayBooks(List<BookItem> bookResult) {
+            bookAdapter.setResults(bookResult);
         }
 
     private void performSearch() {
-        String keyword = keywordEditText.getEditableText().toString();
+        String keyword = keywordEditText.getText().toString();
         viewModel.searchVolumes(keyword);
+
     }
 
+    @Override
+    public void saveBook(BookItem bookItem) {
+        viewModel.saveBook(bookItem);
+
+    }
 }

@@ -10,31 +10,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigbang.booksapi.R;
-import com.bigbang.booksapi.model.Item;
-import com.bigbang.booksapi.model.VolumeInfo;
+import com.bigbang.booksapi.model.BookItem;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.internal.Util;
 
 public class BookResultAdapter extends RecyclerView.Adapter<BookResultAdapter.BookResultViewHolder> {
 
-    private List<Item> bookList;
+    private List<BookItem> bookList;
     private BookClickListener bookClickListener;
 
-    public BookResultAdapter(List<Item> bookList, BookClickListener bookClickListener){
+    public BookResultAdapter(List<BookItem> bookList, BookClickListener bookClickListener){
         this.bookList = bookList;
         this.bookClickListener = bookClickListener;
     }
 
     public interface BookClickListener{
-        void saveBook(Item bookItem);
+        void saveBook(BookItem bookItem);
     }
     @NonNull
     @Override
@@ -46,11 +42,11 @@ public class BookResultAdapter extends RecyclerView.Adapter<BookResultAdapter.Bo
 
     @Override
     public void onBindViewHolder(@NonNull BookResultViewHolder holder, int position) {
-        Item item = bookList.get(position);
+        BookItem item = bookList.get(position);
         holder.bookTitleTextView.setText("Title: " + item.getVolumeInfo().getTitle());
         holder.bookDateTextView.setText("Published Date: " + item.getVolumeInfo().getPublishedDate());
 
-        if(item.getVolumeInfo().getImageLinks() != null){
+        if(item.getVolumeInfo().getImageLinks() != null) {
             String imageUrl = item.getVolumeInfo().getImageLinks().getSmallThumbnail()
                     .replace("http://", "https://");
             Glide.with(holder.itemView)
@@ -60,11 +56,7 @@ public class BookResultAdapter extends RecyclerView.Adapter<BookResultAdapter.Bo
         }
 
         if(item.getVolumeInfo().getAuthors() != null){
-            String authors = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                authors = String.join((CharSequence) item.getVolumeInfo().getAuthors(), ", ");
-            }
-            holder.bookAuthorTextView.setText(authors);
+            holder.bookAuthorTextView.setText(item.getVolumeInfo().getAuthors().toString());
         }
 
         holder.itemView.setOnClickListener(view->
@@ -78,7 +70,7 @@ public class BookResultAdapter extends RecyclerView.Adapter<BookResultAdapter.Bo
         return bookList.size();
     }
 
-    public void setResults(List<Item>bookList){
+    public void setResults(List<BookItem>bookList){
         this.bookList = bookList;
         notifyDataSetChanged();
 

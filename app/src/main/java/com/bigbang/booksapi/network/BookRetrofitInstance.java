@@ -6,6 +6,7 @@ import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.bigbang.booksapi.util.Constants.*;
@@ -31,6 +32,7 @@ public class BookRetrofitInstance {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
@@ -39,7 +41,7 @@ public class BookRetrofitInstance {
         return retrofit.create(BookService.class);
     }
 
-    public Observable<BookResult>searchBooks(String query){
+    public Observable<BookResult> searchBooks(String query){
         return bookService.searchBooks(query);
     }
 

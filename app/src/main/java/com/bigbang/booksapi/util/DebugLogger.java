@@ -14,3 +14,4 @@ public class DebugLogger {
         Log.d(TAG, message);
     }
 }
+
