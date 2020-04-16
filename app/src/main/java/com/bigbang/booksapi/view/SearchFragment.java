@@ -57,13 +57,7 @@ public class SearchFragment extends Fragment implements BookResultAdapter.BookCl
         bookAdapter = new BookResultAdapter(new ArrayList<>(), this);
 
         viewModel = ViewModelProviders.of(this).get(BookViewModel.class);
-        disposable.add(viewModel.getBookList(keywordEditText.getText().toString()).subscribe(bookResult -> {
-            DebugLogger.logDebug("Books: " + bookResult.size());
-            displayBooks(bookResult);
-        }, throwable-> {
 
-                    DebugLogger.logError(throwable);
-        }));
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         searchRecyclerView.setAdapter(bookAdapter);
 
@@ -75,8 +69,13 @@ public class SearchFragment extends Fragment implements BookResultAdapter.BookCl
         }
 
     private void performSearch() {
-        String keyword = keywordEditText.getText().toString();
-        viewModel.searchVolumes(keyword);
+        disposable.add(viewModel.getBookList(keywordEditText.getText().toString()).subscribe(bookResult -> {
+            DebugLogger.logDebug("Books: " + bookResult.size());
+            displayBooks(bookResult);
+        }, throwable-> {
+
+            DebugLogger.logError(throwable);
+        }));
 
     }
 
