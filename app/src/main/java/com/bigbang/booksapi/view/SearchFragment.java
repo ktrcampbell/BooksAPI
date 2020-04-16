@@ -57,7 +57,7 @@ public class SearchFragment extends Fragment implements BookResultAdapter.BookCl
         bookAdapter = new BookResultAdapter(new ArrayList<>(), this);
 
         viewModel = ViewModelProviders.of(this).get(BookViewModel.class);
-        disposable.add(viewModel.getBookList("Harry Potter").subscribe(bookResult -> {
+        disposable.add(viewModel.getBookList(keywordEditText.getText().toString()).subscribe(bookResult -> {
             DebugLogger.logDebug("Books: " + bookResult.size());
             displayBooks(bookResult);
         }, throwable-> {
